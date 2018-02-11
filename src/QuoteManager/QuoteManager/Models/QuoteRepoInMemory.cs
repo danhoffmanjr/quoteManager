@@ -5,10 +5,18 @@ using System.Threading.Tasks;
 
 namespace QuoteManager.Models
 {
-    public class QuoteRepo
+    public class QuoteRepoInMemory : IQuoteRepo
     {
-        private static List<Quote> _quotes = new List<Quote>();
+        private static List<Quote> _quotes;
         private static int _nextId = 1;
+
+        public QuoteRepoInMemory()
+        {
+            if (_quotes == null)
+            {
+                _quotes = new List<Quote>();
+            }
+        }
 
         public List<Quote> GetAllQuotes()
         {
@@ -26,9 +34,9 @@ namespace QuoteManager.Models
             _quotes.Add(quoteToAdd);
         }
 
-        public void DeleteQuote(Quote quoteToDelete)
+        public void DeleteQuote(int id)
         {
-            var original = GetQuoteById(quoteToDelete.Id);
+            var original = GetQuoteById(id);
             _quotes.Remove(original);
         }
     }
