@@ -11,6 +11,6 @@ namespace QuoteManager.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string QuoteText { get; set; }
-        public DateTime DateSubmit { get; set; }
+        public string DateSubmit { get; set; }
     }
 }

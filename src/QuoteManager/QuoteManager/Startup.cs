@@ -35,7 +35,7 @@ namespace QuoteManager
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
-            services.AddScoped<IQuoteRepo, QuoteRepoInMemory>();
+            services.AddScoped<IQuoteRepo, QuoteRepoADO>();
 
             services.AddMvc();
         }
