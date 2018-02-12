@@ -61,17 +61,17 @@ namespace QuoteManager.Controllers
         // GET: Quotes/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(_quotesRepo.GetQuoteById(id));
         }
 
         // POST: Quotes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Quote editedQuote, IFormCollection collection)
         {
             try
             {
-                // TODO: Add update logic here
+                _quotesRepo.UpdateQuote(editedQuote);
 
                 return RedirectToAction(nameof(Index));
             }

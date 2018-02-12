@@ -19,6 +19,13 @@ namespace QuoteManager.Models
             + "(AuthorFirstName, AuthorLastName, Quote) " 
             + "VALUES(@FirstName, @LastName, @Quote)";
 
+        private string updateQuery = "UPDATE Quotes "
+            + "SET AuthorFirstName = @FirstName, "
+            + "AuthorLastName = @LastName, "
+            + "Quote = @Quote ";
+
+        private string deleteQuery = "DELETE FROM Quotes ";
+
 
         public List<Quote> GetAllQuotes()
         {
@@ -40,11 +47,9 @@ namespace QuoteManager.Models
                         {
                             Id = int.Parse(reader[0].ToString()),
                             FirstName = reader[1].ToString(),
-                            LastName = reader[2].ToString(),
-                            QuoteText = reader[3].ToString(),
-                            //DateSubmit = Convert.ToDateTime(reader[3].ToString(), CultureInfo.GetCultureInfo("en-US"))
-                            //DateSubmit = DateTime.ParseExact(reader[4].ToString(), "M/d/yyyy H:mm:ss", CultureInfo.InvariantCulture)
-                            DateSubmit = reader[4].ToString()
+                            LastName = reader[4].ToString(),
+                            QuoteText = reader[2].ToString(),
+                            DateSubmit = reader.GetDateTime(3)
                         };
 
                         quotes.Add(newQuote);
@@ -81,9 +86,9 @@ namespace QuoteManager.Models
                         {
                             Id = int.Parse(reader[0].ToString()),
                             FirstName = reader[1].ToString(),
-                            LastName = reader[2].ToString(),
-                            QuoteText = reader[3].ToString(),
-                            DateSubmit = reader[4].ToString()
+                            LastName = reader[4].ToString(),
+                            QuoteText = reader[2].ToString(),
+                            DateSubmit = reader.GetDateTime(3)
                         };
                     }
                 }
@@ -121,9 +126,48 @@ namespace QuoteManager.Models
 
         }
 
+        public void UpdateQuote(Quote editedQuote)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                SqlCommand command = new SqlCommand(updateQuery + selectByIdClause, conn);
+
+                try
+                {
+                    command.Parameters.AddWithValue("@FirstName", editedQuote.FirstName);
+                    command.Parameters.AddWithValue("@LastName", editedQuote.LastName);
+                    command.Parameters.AddWithValue("@Quote", editedQuote.QuoteText);
+                    command.Parameters.AddWithValue("@id", editedQuote.Id);
+
+                    conn.Open();
+
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
         public void DeleteQuote(int id)
         {
-            //TODO
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(deleteQuery + selectByIdClause, conn);
+                    command.Parameters.AddWithValue("@id", id);
+
+                    conn.Open();
+
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
         }
     }
 }

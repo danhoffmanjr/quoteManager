@@ -34,6 +34,14 @@ namespace QuoteManager.Models
             _quotes.Add(quoteToAdd);
         }
 
+        public void UpdateQuote(Quote editedQuote)
+        {
+            Quote toBeUpdated = GetQuoteById(editedQuote.Id);
+            toBeUpdated.FirstName = editedQuote.FirstName;
+            toBeUpdated.LastName = editedQuote.LastName;
+            toBeUpdated.QuoteText = editedQuote.QuoteText;
+        }
+
         public void DeleteQuote(int id)
         {
             var original = GetQuoteById(id);
