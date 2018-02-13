@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +11,20 @@ namespace QuoteManager.Models
 {
     public class QuoteRepoADO : IQuoteRepo
     {
-        private string connStr = "Server=(localdb)\\mssqllocaldb;Database=aspnet-QuoteManager-0D50DCD5-457D-458F-BCD0-73839EA78F1D;Trusted_Connection=True;MultipleActiveResultSets=true";
+        public static IConfiguration Configuration { get; set; }
+
+        public static string DbConfig()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+
+            Configuration = builder.Build();
+
+            return Configuration["ConnectionStrings:DefaultConnection"];
+        }
+
+        private string connStr = DbConfig();
 
         private string selectAllQuery = "SELECT * FROM Quotes ";
 
