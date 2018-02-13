@@ -11,20 +11,29 @@ namespace QuoteManager.Models
 {
     public class QuoteRepoADO : IQuoteRepo
     {
-        public static IConfiguration Configuration { get; set; }
+        //Inject the database connection string from appsettings.json file
+        private readonly IConfiguration _config;
+        private string connStr;
 
-        public static string DbConfig()
+        public QuoteRepoADO(IConfiguration config)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
-
-            Configuration = builder.Build();
-
-            return Configuration["ConnectionStrings:DefaultConnection"];
+            _config = config;
+            connStr = _config.GetConnectionString("DefaultConnection");
         }
 
-        private string connStr = DbConfig();
+        //Another way to grab connection string from appsettings.json file
+        //private static IConfiguration Configuration { get; set; }
+
+        //private static string DbConfig()
+        //{
+        //    var builder = new ConfigurationBuilder()
+        //        .SetBasePath(Directory.GetCurrentDirectory())
+        //        .AddJsonFile("appsettings.json");
+
+        //    Configuration = builder.Build();
+
+        //    return Configuration["ConnectionStrings:DefaultConnection"].ToString();
+        //} 
 
         private string selectAllQuery = "SELECT * FROM Quotes ";
 
